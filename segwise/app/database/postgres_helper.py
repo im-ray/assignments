@@ -109,3 +109,63 @@ def write_dataframe_to_postgres(df, table_name='game_data'):
         conn.rollback()
     finally:
         cur.close()
+
+
+def query_data_from_postgres(params):
+
+    # Define the columns in your database (19 columns in total)
+    columns = [
+        'app_id', 'name', 'release_date', 'required_age', 'price', 'dlc_count',
+        'about_the_game', 'supported_languages', 'windows', 'mac', 'linux',
+        'positive', 'negative', 'score_rank', 'developers', 'publishers',
+        'categories', 'genres', 'tags'
+    ]
+    # Initialize the SQL query base
+    base_query = "SELECT * FROM game_data WHERE TRUE"
+    
+    # List to hold query conditions
+    conditions = []
+    params_list = []  # List to collect values for safe parameterized queries
+    
+    # Handle each query parameter dynamically
+    for field, value in params.items():
+        if field in columns:  # Only handle parameters that correspond to the valid columns
+            if field == "release_date":  # Exact match for release_date (date)
+                conditions.append(f"release_date = %s")
+                params_list.append(value)
+            elif isinstance(value, str):  # Substring match for string columns
+                conditions.append(f"{field} ILIKE %s")
+                params_list.append(f"%{value}%")
+            else:  # Exact match for numerical fields
+                conditions.append(f"{field} = %s")
+                params_list.append(value)
+        # Handle special date filters like release_date__gte and release_date__lte
+        elif field.startswith("release_date__gte"):  # Greater than or equal for date
+            conditions.append("release_date >= %s")
+            params_list.append(value)
+        elif field.startswith("release_date__lte"):  # Less than or equal for date
+            conditions.append("release_date <= %s")
+            params_list.append(value)
+    
+    # Add the conditions to the base query
+    if conditions:
+        base_query += " AND " + " AND ".join(conditions)
+    
+    # Execute the query with parameters to prevent
+    try:
+        conn = PostgresConnection.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(base_query, params_list)  # Pass the params_list to execute
+        rows = cursor.fetchall()
+    
+        # Format the result as a list of dictionaries
+        columns = [desc[0] for desc in cursor.description]
+        data = [dict(zip(columns, row)) for row in rows]
+        cursor.close()
+        return data
+    except Exception as e:
+        # Handle any errors during query execution
+        print(f"Error executing query: {e}")
+        return {"error": str(e)}
+
+
