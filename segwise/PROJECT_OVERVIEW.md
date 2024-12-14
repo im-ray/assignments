@@ -74,3 +74,21 @@ curl -X POST -H "Content-Type: application/json" -d '{"csv_url": "https://exampl
 ```
 
 
+#### Setup with postgres
+```
+docker pull postgres:latest
+```
+
+```
+docker run -d --name postgres_container -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=analytics -p 5432:5432 postgres:latest
+```
+
+```
+python3 run.py
+```
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"csv_url": "https://raw.githubusercontent.com/im-ray/assignments/main/segwise/game_data.csv"}' http://127.0.0.1:5000/upload_csv_url
+```
+
+
