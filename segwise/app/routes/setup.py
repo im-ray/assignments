@@ -10,8 +10,8 @@ from ..database import get_client
 #         result = create_database_and_table()
 #         return jsonify({'message': result})
 
-from flask import jsonify
-from ..database import get_client
+# from flask import jsonify
+# from ..database import get_client
 
 def setup_db_schema():
     """This function is called to set up the database schema directly."""
