@@ -69,5 +69,8 @@ python run.py
 curl -X POST -F "file=@game_data.csv" http://127.0.0.1:5000/upload_csv
 ```
 
+```
+curl -X POST -H "Content-Type: application/json" -d '{"csv_url": "https://example.com/your_csv_file.csv"}' http://127.0.0.1:5000/upload_csv_url
+```
 
 
