@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV URL Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input, button {
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Upload CSV from URL</h1>
+    
+    <form id="csvForm">
+        <label for="csv_url">Enter CSV URL:</label><br>
+        <input type="text" id="csv_url" name="csv_url" required placeholder="Enter URL of CSV file"><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('csvForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let csvUrl = document.getElementById('csv_url').value;
+            let responseDiv = document.getElementById('response');
+
+            // Clear the response message
+            responseDiv.innerHTML = '';
+
+            // Validate the URL
+            if (!csvUrl.startsWith('http') && !csvUrl.startsWith('https')) {
+                responseDiv.innerHTML = '<p class="error">Please enter a valid CSV URL starting with http:// or https://.</p>';
+                return;
+            }
+
+            // Send POST request with CSV URL
+            fetch('/upload_csv_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ csv_url: csvUrl }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the JSON response from Flask
+                if (data.message) {
+                    responseDiv.innerHTML = `<p class="success">${data.message}</p>`;
+                } else if (data.error) {
+                    responseDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                responseDiv.innerHTML = `<p class="error">Error: ${error}</p>`;
+            });
+        });
+    </script>
+
+</body>
+</html>
