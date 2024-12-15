@@ -121,21 +121,28 @@
                 'positive', 'negative', 'score_rank', 'developers', 'publishers', 'categories', 'genres', 'tags'
             ];
 
-
             fieldNames.forEach((fieldName) => {
                 const field = document.getElementById(fieldName);
-                const value = field.value.trim();
+                let value = field.value.trim();
+                
                 if (value) {
-                    params[fieldName] = value; // Only include fields with values
+                    // Convert to appropriate types
+                    if (field.type === 'number') {
+                        // Convert to number (parseInt or parseFloat)
+                        if (fieldName === 'price' || fieldName === 'score_rank') {
+                            value = parseFloat(value);
+                        } else {
+                            value = parseInt(value, 10);
+                        }
+                    } else if (field.type === 'date' || fieldName.includes('release_date')) {
+                        // For date fields, convert to ISO format (timestamp)
+                        value = new Date(value).toISOString();
+                    }
+
+                    // Add the processed value to params
+                    params[fieldName] = value;
                 }
             });
-          
-            // // Add the two extra date fields
-            // const releaseDateGte = document.getElementById('release_date__gte').value.trim();
-            // const releaseDateLte = document.getElementById('release_date__lte').value.trim();
-
-            // if (releaseDateGte) params['release_date__gte'] = releaseDateGte;
-            // if (releaseDateLte) params['release_date__lte'] = releaseDateLte;
 
             // Convert params object to query string
             const queryString = new URLSearchParams(params).toString();
