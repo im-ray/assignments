@@ -95,7 +95,22 @@ Provide filtering parameters via a POST request (replace `<parameter>` with actu
 - The PostgreSQL container must be running before starting the Flask application.
 
 
+### Docker container Setup
+## Running with Docker
 
+### Build the Docker Image
+1. Ensure Docker is installed and running on your machine.
+2. Build the Docker image from the project directory:
+   ```
+      docker build --no-cache -t segwise-app -f Dockerfile .
+   ```
+3. Start a container from the built image:
+```
+docker run -d -p 5000:5000 --name segwise_container segwise-app
+```
+4. The application will now be accessible at:
+http://127.0.0.1:5000/ for the upload CSV functionalities.
+http://127.0.0.1:5000/fetch_data for the interactive UI for data explorer.
 
 
 
