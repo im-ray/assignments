@@ -1,5 +1,127 @@
 # assignments
 
+# Segwise: CSV Upload and Data Filtering Application
+
+## Overview
+Segwise is a Flask-based application designed for uploading CSV files and filtering data interactively or via API calls. This guide provides step-by-step instructions to set up and run the application.
+
+---
+
+## Getting Started
+
+### Clone the Repository
+```bash
+git clone https://github.com/im-ray/assignments.git
+```
+
+### Navigate to the Project Directory
+```bash
+cd segwise
+```
+
+---
+
+## Setup Instructions
+
+### Local Setup
+1. Install required dependencies:
+   ```bash
+   pip install -r flask_req.txt
+   ```
+   > **Note:** Ensure you are using Python 3.9.
+
+2. Pull the PostgreSQL Docker image:
+   ```bash
+   docker pull postgres:latest
+   ```
+
+3. Start a PostgreSQL container:
+   ```bash
+   docker run -d \
+     --name postgres_container \
+     -e POSTGRES_USER=postgres \
+     -e POSTGRES_PASSWORD=postgres \
+     -e POSTGRES_DB=analytics \
+     -p 5432:5432 \
+     postgres:latest
+   ```
+
+---
+
+## Running the Application
+Start the Flask application:
+```bash
+python run.py
+```
+
+Once the application is running, navigate to:
+- [http://127.0.0.1:5000/](http://127.0.0.1:5000/) for CSV upload functionality.
+- [http://127.0.0.1:5000/fetch_data](http://127.0.0.1:5000/fetch_data) for interactive data filtering.
+
+---
+
+## Usage
+
+### Upload CSV via Terminal (cURL Example)
+You can upload a CSV file by providing a valid `csv_url` parameter. Run the following command:
+
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"csv_url": "https://example.com/your_csv_file.csv"}' \
+  http://127.0.0.1:5000/upload_csv_url
+```
+
+### Filter Data
+#### Interactive UI:
+Navigate to:
+[http://127.0.0.1:5000/fetch_data](http://127.0.0.1:5000/fetch_data)
+
+You can use the provided interface to pass values for filtering the data.
+
+#### Terminal (cURL Example):
+Provide filtering parameters via a POST request (replace `<parameter>` with actual values).
+
+---
+
+## Screenshots
+*(Include relevant screenshots here)*
+
+---
+
+## Notes
+- Ensure Docker is installed and running on your machine.
+- The PostgreSQL container must be running before starting the Flask application.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #### 1. upload_csv endpoint
 The upload_csv API allows users to easily upload datasets stored in CSV files by providing a direct link to a publicly accessible CSV file. This API automates the process of importing data, parsing it, and storing it in a database, saving time and reducing manual effort for data analysts.
 
