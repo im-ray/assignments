@@ -85,6 +85,9 @@ Provide filtering parameters via a POST request (replace `<parameter>` with actu
 
 ## Screenshots
 *(Include relevant screenshots here)*
+![upload_web_page](images/upload_csv.png)
+
+![data_explorer](images/fetch_data.png)
 
 ---
 
