@@ -1,0 +1,201 @@
+# Use an official Ubuntu base image
+FROM ubuntu:20.04
+
+# Set environment variables to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python 3.9, PostgreSQL, and other required packages
+RUN apt-get update && apt-get install -y \
+    python3.9 \
+    python3.9-distutils \
+    python3-pip \
+    postgresql postgresql-contrib \
+    sudo \
+    && apt-get clean
+
+# Set Python 3.9 as the default Python version
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+RUN update-alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.9 1
+
+# Set the working directory in the container to the root directory
+WORKDIR /
+
+# Copy the requirements file into the container at root (/)
+COPY flask_req.txt /
+
+# Install the Python dependencies from flask_req.txt
+RUN pip3 install --no-cache-dir -r flask_req.txt
+
+# Copy the 'app' directory into the container at /app
+COPY app /app
+
+# Copy 'run.py' and 'config.py' into the root of the container
+COPY run.py /
+COPY config.py /
+
+# Expose the port for both the Flask app (5000) and PostgreSQL (5432)
+EXPOSE 5000 5432
+
+# Copy the entrypoint script into the container
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # Use an official Ubuntu image as a parent image
+# FROM ubuntu:20.04
+
+# # Set the working directory in the container to the root directory
+# WORKDIR /
+
+# # Set the environment variable to non-interactive to suppress tzdata prompt
+# ENV DEBIAN_FRONTEND=noninteractive
+
+# # Install PostgreSQL, Python, pip, and other required packages
+# RUN apt-get update && apt-get install -y \
+#     postgresql postgresql-contrib \
+#     python3 python3-pip \
+#     sudo \
+#     tzdata \
+#     && apt-get clean
+
+# # Set the timezone to Asia/Kolkata (Indian Standard Time) non-interactively
+# RUN ln -fs /usr/share/zoneinfo/Asia/Kolkata /etc/localtime && \
+#     dpkg-reconfigure --frontend noninteractive tzdata
+
+# # Install the required Python packages using the requirements file
+# COPY flask_req.txt /
+# RUN pip3 install --no-cache-dir -r flask_req.txt
+
+# # Copy the 'app' directory into the container at /app
+# COPY app /app
+
+# # Copy 'run.py' and 'config.py' into the root of the container
+# COPY run.py /
+# COPY config.py /
+
+# # Expose the port for both the Flask app (5000) and PostgreSQL (5432)
+# EXPOSE 5000 5432
+
+# # Copy the entrypoint script into the container
+# COPY entrypoint.sh /entrypoint.sh
+# RUN chmod +x /entrypoint.sh
+
+# # Set the entrypoint
+# ENTRYPOINT ["/entrypoint.sh"]
+
+
+
+
+
+# # Use an official Python runtime as a parent image
+# # FROM python:3.9-slim
+
+# # Use an official Ubuntu image as a parent image
+# FROM ubuntu:20.04
+
+# # Set the working directory in the container to the root directory
+# WORKDIR /
+
+# # Install PostgreSQL and other required packages
+# RUN apt-get update && apt-get install -y \
+#     postgresql postgresql-contrib \
+#     sudo \
+#     && apt-get clean && rm -rf /var/lib/apt/lists/*
+# # RUN apt install postgresql
+
+# # Copy the requirements file into the container at root (/)
+# COPY flask_req.txt /
+
+# # Install the Python dependencies from flask_req.txt
+# # RUN pip install --no-cache-dir -r flask_req.txt
+# RUN pip3 install --no-cache-dir -r flask_req.txt
+
+# # Copy the 'app' directory into the container at /app
+# COPY app /app
+
+# # Copy 'run.py' and 'config.py' into the root of the container
+# COPY run.py /
+# COPY config.py /
+
+# # Expose the port for both the Flask app (5000) and PostgreSQL (5432)
+# EXPOSE 5000 5432
+
+# # Run the Flask application
+# # CMD service postgresql start && python run.py
+# # Copy the entrypoint script into the container
+# COPY entrypoint.sh /entrypoint.sh
+# RUN chmod +x /entrypoint.sh
+# # Set the entrypoint
+# ENTRYPOINT ["/entrypoint.sh"]
+
+
+
+
+
+
+
+
+
+# # Use an official Ubuntu image as a parent image
+# FROM ubuntu:20.04
+
+# # Set the working directory in the container to the root directory
+# WORKDIR /
+
+# # Install PostgreSQL, Python, pip, and other required packages
+# RUN apt-get update && apt-get install -y \
+#     postgresql postgresql-contrib \
+#     python3 python3-pip \
+#     sudo \
+#     tzdata \
+#     && apt-get clean
+
+# # Set the timezone to Asia/Kolkata (Indian Standard Time)
+# RUN ln -fs /usr/share/zoneinfo/Asia/Kolkata /etc/localtime && \
+#     dpkg-reconfigure --frontend noninteractive tzdata
+
+# # Install the required Python packages using the requirements file
+# COPY flask_req.txt /
+# RUN pip3 install --no-cache-dir -r flask_req.txt
+
+# # Copy the 'app' directory into the container at /app
+# COPY app /app
+
+# # Copy 'run.py' and 'config.py' into the root of the container
+# COPY run.py /
+# COPY config.py /
+
+# # Expose the port for both the Flask app (5000) and PostgreSQL (5432)
+# EXPOSE 5000 5432
+
+# # Copy the entrypoint script into the container
+# COPY entrypoint.sh /entrypoint.sh
+# RUN chmod +x /entrypoint.sh
+
+# # Set the entrypoint
+# ENTRYPOINT ["/entrypoint.sh"]
