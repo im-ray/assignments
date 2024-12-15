@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        .response-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .response-table th, .response-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Explorer</h1>
+    <form id="dataExplorerForm">
+        <!-- Dynamically generated filter fields based on columns -->
+        <label for="release_date__gte">Release Date (Greater than or Equal to):</label>
+        <input type="date" id="release_date__gte" name="release_date__gte">
+
+        <label for="release_date__lte">Release Date (Less than or Equal to):</label>
+        <input type="date" id="release_date__lte" name="release_date__lte">
+
+        <label for="app_id">App ID:</label>
+        <input type="text" id="app_id" name="app_id" placeholder="Enter App ID">
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter Name">
+
+        <label for="release_date">Release Date:</label>
+        <input type="text" id="release_date" name="release_date" placeholder="Enter Release Date">
+
+        <label for="required_age">Required Age:</label>
+        <input type="number" id="required_age" name="required_age" placeholder="Enter Required Age">
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" placeholder="Enter Price">
+
+        <label for="dlc_count">DLC Count:</label>
+        <input type="number" id="dlc_count" name="dlc_count" placeholder="Enter DLC Count">
+
+        <label for="about_the_game">About the Game:</label>
+        <input type="text" id="about_the_game" name="about_the_game" placeholder="Enter About the Game">
+
+        <label for="supported_languages">Supported Languages:</label>
+        <input type="text" id="supported_languages" name="supported_languages" placeholder="Enter Supported Languages">
+
+        <label for="windows">Windows:</label>
+        <input type="text" id="windows" name="windows" placeholder="Enter Windows support details">
+
+        <label for="mac">Mac:</label>
+        <input type="text" id="mac" name="mac" placeholder="Enter Mac support details">
+
+        <label for="linux">Linux:</label>
+        <input type="text" id="linux" name="linux" placeholder="Enter Linux support details">
+
+        <label for="positive">Positive Reviews:</label>
+        <input type="number" id="positive" name="positive" placeholder="Enter Positive Reviews count">
+
+        <label for="negative">Negative Reviews:</label>
+        <input type="number" id="negative" name="negative" placeholder="Enter Negative Reviews count">
+
+        <label for="score_rank">Score Rank:</label>
+        <input type="text" id="score_rank" name="score_rank" placeholder="Enter Score Rank">
+
+        <label for="developers">Developers:</label>
+        <input type="text" id="developers" name="developers" placeholder="Enter Developers details">
+
+        <label for="publishers">Publishers:</label>
+        <input type="text" id="publishers" name="publishers" placeholder="Enter Publishers details">
+
+        <label for="categories">Categories:</label>
+        <input type="text" id="categories" name="categories" placeholder="Enter Categories">
+
+        <label for="genres">Genres:</label>
+        <input type="text" id="genres" name="genres" placeholder="Enter Genres">
+
+        <label for="tags">Tags:</label>
+        <input type="text" id="tags" name="tags" placeholder="Enter Tags">
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="responseContainer">
+        <!-- The response from API will be displayed here -->
+    </div>
+
+    <script>
+        document.getElementById("dataExplorerForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            const params = {}; // Object to hold the form data
+
+            // List of all the form fields you want to capture
+            const fieldNames = [
+                'release_date__gte', 'release_date__lte', 'app_id', 'name', 'release_date', 'required_age', 
+                'price', 'dlc_count', 'about_the_game', 'supported_languages', 'windows', 'mac', 'linux', 
+                'positive', 'negative', 'score_rank', 'developers', 'publishers', 'categories', 'genres', 'tags'
+            ];
+
+
+            fieldNames.forEach((fieldName) => {
+                const field = document.getElementById(fieldName);
+                const value = field.value.trim();
+                if (value) {
+                    params[fieldName] = value; // Only include fields with values
+                }
+            });
+          
+            // // Add the two extra date fields
+            // const releaseDateGte = document.getElementById('release_date__gte').value.trim();
+            // const releaseDateLte = document.getElementById('release_date__lte').value.trim();
+
+            // if (releaseDateGte) params['release_date__gte'] = releaseDateGte;
+            // if (releaseDateLte) params['release_date__lte'] = releaseDateLte;
+
+            // Convert params object to query string
+            const queryString = new URLSearchParams(params).toString();
+            
+            // Send request to /data_explorer endpoint with query parameters
+            fetch(`/data_explorer?${queryString}`)
+                .then(response => response.json()) // Assuming the API returns a JSON response
+                .then(data => {
+                    // Handle the API response
+                    const responseContainer = document.getElementById("responseContainer");
+                    responseContainer.innerHTML = ''; // Clear any previous response
+                    
+                    if (data.error) {
+                        responseContainer.innerHTML = `<p style="color:red;">Error: ${data.error}</p>`;
+                    } else {
+                        // Display response in a table format
+                        const table = document.createElement("table");
+                        table.className = "response-table";
+                        const tableHeader = document.createElement("thead");
+                        const headerRow = document.createElement("tr");
+                        Object.keys(data[0]).forEach(key => {
+                            const th = document.createElement("th");
+                            th.innerText = key;
+                            headerRow.appendChild(th);
+                        });
+                        tableHeader.appendChild(headerRow);
+                        table.appendChild(tableHeader);
+
+                        const tableBody = document.createElement("tbody");
+                        data.forEach(row => {
+                            const tr = document.createElement("tr");
+                            Object.values(row).forEach(value => {
+                                const td = document.createElement("td");
+                                td.innerText = value;
+                                tr.appendChild(td);
+                            });
+                            tableBody.appendChild(tr);
+                        });
+                        table.appendChild(tableBody);
+
+                        responseContainer.appendChild(table);
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("responseContainer").innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
