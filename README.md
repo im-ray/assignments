@@ -8,11 +8,13 @@ Segwise is a Flask-based application designed to upload and process CSV files co
 ---
 
 ## Directory Structure
+```
 segwise/
 ├── app/
 ├── run.py
 ├── config.py
 └── flask_req.txt
+```
 
 
 ## Getting Started
