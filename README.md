@@ -1,11 +1,19 @@
 # assignments
 
-# Segwise: CSV Upload and Data Filtering Application
+# Segwise: CSV Upload and Data Filtering Application for Game Data Analytics
 
 ## Overview
-Segwise is a Flask-based application designed for uploading CSV files and filtering data interactively or via API calls. This guide provides step-by-step instructions to set up and run the application.
+Segwise is a Flask-based application designed to upload and process CSV files containing game data. It offers an API and an interactive UI for filtering and querying the data based on various parameters such as developers, game genres, and more.
 
 ---
+
+## Directory Structure
+segwise/
+├── app/
+├── run.py
+├── config.py
+└── flask_req.txt
+
 
 ## Getting Started
 
@@ -163,23 +171,22 @@ http://127.0.0.1:5000/fetch_data for the interactive UI for data explorer.
 - The PostgreSQL container must be running before starting the Flask application.
 
 
-### Cost Estimation for Production
+## Cost Estimation for Production
 
-Assuming the application is running 24x7 for 30 days with one file upload and 100 queries per day:
+Assuming the application is running 24x7 for 30 days with one file upload and 100 queries per day, the following is an estimated monthly cost:
 
-Infrastructure Costs:
+- **PostgreSQL Database (AWS RDS or similar):** $25/month for a basic instance.
+- **Flask App Hosting (AWS EC2 t2.micro):** $10/month.
+- **Storage Costs (Assuming 1GB of data):** $0.10/month. (if we wanted to store csv files etc...)
 
-PostgreSQL Database (AWS RDS or similar): $25/month for a basic instance.
+Total Estimated Cost: **$35.10/month**
 
-Flask App Hosting (AWS EC2 t2.micro): $10/month.
+more detailed cost info can be found at 
+rds pricing: https://blog.awsfundamentals.com/aws-rds-pricing
+ec2 pricing: https://aws.amazon.com/ec2/pricing/on-demand/
+s3 pricing:  https://aws.amazon.com/s3/pricing/
 
-Storage Costs (Assuming 1GB of data): $0.10/month.
-
-Total Estimated Cost:
-
-$35.10/month
-
-
+*Note: Actual costs may vary based on data volume, traffic, and specific cloud services used.*
 
 
 
